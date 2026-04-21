@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     protected $table = 'sach';
+    protected $primaryKey = 'id';
     public $timestamps = false;
 
     protected $fillable = [

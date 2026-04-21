@@ -7,12 +7,13 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
     public function index($userId = null)
     {
-        $query = Order::with(['orderDetails.book', 'address', 'payment']);
+        $query = Order::with(['orderDetails.book', 'address', 'payment', 'user']);
 
         if ($userId) {
             $query->where('nguoi_dung_id', $userId);
@@ -42,7 +43,19 @@ class OrderController extends Controller
         }
 
         // Debug: Log order details
-        \Log::info('Order Details:', $order->orderDetails->toArray());
+        Log::info('Order Details:', $order->orderDetails->toArray());
+
+        // Append default book data if book is missing
+        $order->orderDetails->each(function($detail) {
+            if (!$detail->book) {
+                $detail->book = (object)[
+                    'id' => $detail->sach_id,
+                    'ten_sach' => 'Sách không tồn tại',
+                    'tac_gia' => 'N/A',
+                    'mo_ta' => 'Sách đã bị xóa khỏi hệ thống'
+                ];
+            }
+        });
 
         return response()->json($order, 200);
     }

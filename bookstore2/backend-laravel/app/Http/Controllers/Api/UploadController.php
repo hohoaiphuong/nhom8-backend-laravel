@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class UploadController extends Controller
 {
@@ -15,7 +16,7 @@ class UploadController extends Controller
     {
         try {
             // Debug: log incoming request
-            \Log::debug('Upload request received', [
+            Log::debug('Upload request received', [
                 'has_image' => $request->hasFile('image'),
                 'files' => $request->allFiles(),
             ]);
@@ -52,7 +53,7 @@ class UploadController extends Controller
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Log::error('Upload error: ' . $e->getMessage());
+            Log::error('Upload error: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Image upload failed',
                 'error' => $e->getMessage()

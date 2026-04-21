@@ -346,20 +346,28 @@ const Checkout = () => {
               
               <div className="space-y-3">
                 {[
-                  { value: 'tien_mat', label: 'Tiền mặt khi nhận hàng', icon: '💵' },
-                  { value: 'chuyen_khoan', label: 'Chuyển khoản ngân hàng', icon: '🏦' },
-                  { value: 'vi_dien_tu', label: 'Ví điện tử (Momo, ZaloPay)', icon: '📱' }
+                  { value: 'tien_mat', label: 'Tiền mặt khi nhận hàng', icon: '💵', disabled: false },
+                  { value: 'chuyen_khoan', label: 'Chuyển khoản ngân hàng', icon: '🏦', disabled: true },
+                  { value: 'vi_dien_tu', label: 'Ví điện tử (Momo, ZaloPay)', icon: '📱', disabled: true }
                 ].map((method) => (
-                  <label key={method.value} className="flex items-center gap-4 p-3 border-2 rounded cursor-pointer hover:bg-blue-50 transition" style={{borderColor: formData.phuong_thuc_thanh_toan === method.value ? '#2563eb' : '#e5e7eb'}}>
+                  <label key={method.value} className={`flex items-center gap-4 p-3 border-2 rounded transition ${method.disabled ? 'opacity-50 cursor-not-allowed bg-gray-50' : 'cursor-pointer hover:bg-blue-50'}`} style={{borderColor: formData.phuong_thuc_thanh_toan === method.value && !method.disabled ? '#2563eb' : '#e5e7eb'}}>
                     <input
                       type="radio"
                       name="phuong_thuc_thanh_toan"
                       value={method.value}
                       checked={formData.phuong_thuc_thanh_toan === method.value}
                       onChange={handleInputChange}
+                      disabled={method.disabled}
                     />
                     <span className="text-2xl">{method.icon}</span>
-                    <p className="font-semibold text-gray-800">{method.label}</p>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-800">{method.label}</p>
+                    </div>
+                    {method.disabled && (
+                      <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded">
+                        Chưa phát triển
+                      </span>
+                    )}
                   </label>
                 ))}
               </div>
